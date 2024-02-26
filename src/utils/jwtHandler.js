@@ -17,7 +17,8 @@ export const validateToken = (req, res, next) => {
   }
 
   try {
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const response = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    req.id = response.id;
     next();
   } catch (error) {
     authWithRefreshToken(req, res, next);
