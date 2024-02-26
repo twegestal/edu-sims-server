@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { authRouter } from './routes/authRouter.js';
-import { validateToken } from './utils/jwtHandler.js';
+import { caseRouter } from './routes/caseRouter.js';
+import { validateToken } from './utils/auth/jwtHandler.js';
+import { attemptRouter } from './routes/attemptRouter.js';
 
 export const createServer = () => {
   const app = express();
@@ -10,5 +12,7 @@ export const createServer = () => {
   app.use(express.json());
   app.use('/auth', authRouter());
   app.use(validateToken);
+  app.use('/case', caseRouter());
+  app.use('/attempt', attemptRouter());
   return app;
 }

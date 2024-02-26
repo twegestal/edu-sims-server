@@ -1,13 +1,13 @@
 import express from 'express';
 import * as db from '../models/object_index.js';
-import { comparePasswords, hashPassword } from '../utils/encryption.js';
-import { createRefreshCookie, createToken } from '../utils/jwtHandler.js';
+import { comparePasswords, hashPassword } from '../utils/auth/encryption.js';
+import { createRefreshCookie, createToken } from '../utils/auth/jwtHandler.js';
 import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
  * @access: /api/auth/
  * @description Router as defined by Express. 
- * @returns: Router for all end-points
+ * @returns: Router for all end-points concerning authentication
  */
 
 export const authRouter = () => {
@@ -26,7 +26,7 @@ export const authRouter = () => {
    *    isAdmin : boolean
    * }
    */
-  
+
   router.post('/login', async (req, res, _next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -37,13 +37,13 @@ export const authRouter = () => {
         where: {
           email: email,
         },
-      });    
+      });
       if (user === null) {
         return res.status(404).send({ message: 'Username or password incorrect' });
       }
       const compareResult = await comparePasswords(password, user.password);
       if (!compareResult) {
-        return res.status(404).json('Username or password incorrect');
+        return res.status(404).json('Le kuk');
       }
       const token = createToken(user.id);
       const refreshToken = createRefreshCookie(user.id);
@@ -52,19 +52,19 @@ export const authRouter = () => {
       await user.save();
 
       res
-      .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
-      .status(200)
-      .send({
-        email: user.email,
-        token: token,
-        isAdmin: user.is_admin,
-      });
+        .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
+        .status(200)
+        .send({
+          email: user.email,
+          token: token,
+          isAdmin: user.is_admin,
+        });
     } catch (error) {
       console.error('Error login: ', error);
       res.status(500).json('Something went wrong');
     }
   });
-  
+
   /**
    * @access: /api/auth/register
    * @method: POST
@@ -83,7 +83,7 @@ export const authRouter = () => {
   router.post('/register', async (req, res, _next) => {
     const { email, password, group_id } = req.body;
 
-    if(!email || !password || !group_id) {
+    if (!email || !password || !group_id) {
       return res.status(400).json(HTTPResponses.Error[400]);
     }
     try {
@@ -92,31 +92,31 @@ export const authRouter = () => {
           email: email,
         },
       });
-      if(result) {
+      if (result) {
         return res.status(400).json(HTTPResponses.Error[400]);
       }
       const groupIdResult = await db.user_group.findOne({
         where: {
-          registration_link : group_id,
-          is_active : true,
+          registration_link: group_id,
+          is_active: true,
         }
       });
-      if(!groupIdResult) {
+      if (!groupIdResult) {
         return res.status(404).json(HTTPResponses.Error[404]);
       }
       const hashedPassword = await hashPassword(password);
-        const user = await db.end_user.create({
-          group_id: group_id,
-          email: email,
-          password: hashedPassword,
-          is_admin: false,
-        });
-        res.status(201).send({
-          id: user.id,
-          message: 'Registration successful',
+      const user = await db.end_user.create({
+        group_id: group_id,
+        email: email,
+        password: hashedPassword,
+        is_admin: false,
       });
-      
-    } catch(error) {
+      res.status(201).send({
+        id: user.id,
+        message: 'Registration successful',
+      });
+
+    } catch (error) {
       console.error('Error registering user', error);
       return res.status(500).json(HTTPResponses.Error[500]);
     }
