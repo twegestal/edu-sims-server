@@ -71,7 +71,7 @@ export const authRouter = () => {
    * @description: Register for end-users only. 
    * @argument {
    *    email : string
-  *     token : string
+  *     password : string
   *     group_id : string
    * }
    * @return {
@@ -106,7 +106,7 @@ export const authRouter = () => {
       }
       const hashedPassword = await hashPassword(password);
       const user = await db.end_user.create({
-        group_id: group_id,
+        registration_link: group_id,
         email: email,
         password: hashedPassword,
         is_admin: false,
