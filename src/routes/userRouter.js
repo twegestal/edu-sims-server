@@ -2,9 +2,19 @@ import express from 'express';
 import { HTTPResponses } from '../utils/serverResponses.js';
 import * as db from '../models/object_index.js';
 
+/**
+ * @access: /api/user/
+ * @description Router as defined by Express.
+ * @returns: Router for all user endpoints
+ */
 export const userRouter = () => {
   const router = express.Router();
 
+  /**
+   * @access: /api/user/logout
+   * @method: PATCH
+   * @description: Logout-function that removes a users refresh token from the database
+   */
   router.patch('/logout', async (req, res, _next) => {
     const id = req.id;
 
@@ -13,7 +23,7 @@ export const userRouter = () => {
     }
 
     try {
-      const user = await db.end_user.findOne({ where: { id: id }});
+      const user = await db.end_user.findOne({ where: { id: id } });
       if (user === null) {
         return res.status(404).json(HTTPResponses.Error[404]);
       }
@@ -28,4 +38,4 @@ export const userRouter = () => {
   });
 
   return router;
-}
+};

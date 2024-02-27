@@ -7,26 +7,16 @@ import { HTTPResponses } from '../utils/serverResponses.js';
 /**
  * @access: /api/auth/
  * @description Router as defined by Express.
- * @returns: Router for all end-points
+ * @returns: Router for all auth endpoints
  */
-
 export const authRouter = () => {
   const router = express.Router();
+
   /**
    * @access: /api/auth/login
    * @method: POST
    * @description: Login-function for both super-user and user.
-   * @argument {
-   *    email : string
-   *    password : string
-   * }
-   * @return {
-   *    email : string
-   *    token : string
-   *    isAdmin : boolean
-   * }
    */
-
   router.post('/login', async (req, res, _next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -69,18 +59,7 @@ export const authRouter = () => {
    * @access: /api/auth/register
    * @method: POST
    * @description: Register for end-users only.
-   * @argument {
-   *    email : string
-   *     token : string
-   *     group_id : string
-   * }
-   * @return {
-   *    id : string,
-   *    token : string
-   *    message : string
-   * }
    */
-
   router.post('/register', async (req, res, _next) => {
     const { email, password, group_id } = req.body;
 
@@ -137,16 +116,7 @@ export const authRouter = () => {
    * @access: /api/auth/refresh-token
    * @method: GET
    * @description: Authorization with refresh token found in cookies from request
-   * @argument {
-   *    none
-   * }
-   * @return {
-   *    email : string,
-   *    token : string,
-   *    isAdmin : boolean
-   * }
    */
-
   router.get('/refresh-token', async (req, res, _next) => {
     const refreshToken = req.cookies['refresh-token'];
     if (!refreshToken) {
@@ -183,5 +153,6 @@ export const authRouter = () => {
       }
     }
   });
+
   return router;
 };
