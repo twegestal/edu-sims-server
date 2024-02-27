@@ -11,4 +11,4 @@ export const createServer = () => {
   app.use('/auth', authRouter());
   app.use(validateToken);
   return app;
-}
+};
