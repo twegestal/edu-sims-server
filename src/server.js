@@ -16,6 +16,9 @@ export const createServer = () => {
   app.use(cors());
   app.use(express.json());
   app.use(cookieParser());
+  app.get('/health', async (_req, res, _next) => {
+    res.status(200).json('Im healthy!');
+  })
   app.use('/auth', authRouter());
   app.use(validateToken);
   app.use('/user', userRouter());
