@@ -1,3 +1,7 @@
+/**
+ * Server response utility
+ */
+
 export const HTTPResponses = {
   Success: {
     200: 'Förfrågan genomfördes korrekt',
