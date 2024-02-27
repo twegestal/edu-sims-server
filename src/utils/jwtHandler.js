@@ -26,8 +26,7 @@ export const validateToken = (req, res, next) => {
 };
 
 const authWithRefreshToken = async (req, res, next) => {
-  const refreshToken = req.cookies['refreshToken'];
-
+  const refreshToken = req.cookies['refresh-token'];
   try {
     const userId = await validateRefreshToken(refreshToken);
 
