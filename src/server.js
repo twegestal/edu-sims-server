@@ -13,12 +13,12 @@ import { userRouter } from './routes/userRouter.js';
 export const createServer = () => {
   const app = express();
 
-  app.use(cors());
+  app.use(cors({
+    origin: process.env.CLIENT_DOMAIN,
+    credentials: true
+  }));
   app.use(express.json());
   app.use(cookieParser());
-  app.get('/health', async (_req, res, _next) => {
-    res.status(200).json('Im healthy!');
-  })
   app.use('/auth', authRouter());
   app.use(validateToken);
   app.use('/user', userRouter());
