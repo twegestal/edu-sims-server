@@ -6,7 +6,7 @@ import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
  * @access: /api/auth/
- * @description Router as defined by Express. 
+ * @description Router as defined by Express.
  * @returns: Router for all end-points
  */
 
@@ -26,7 +26,7 @@ export const authRouter = () => {
    *    isAdmin : boolean
    * }
    */
-  
+
   router.post('/login', async (req, res, _next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -37,7 +37,7 @@ export const authRouter = () => {
         where: {
           email: email,
         },
-      });    
+      });
       if (user === null) {
         return res.status(404).send({ message: 'Username or password incorrect' });
       }
@@ -52,30 +52,31 @@ export const authRouter = () => {
       await user.save();
 
       res
-      .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
-      .status(200)
-      .send({
-        email: user.email,
-        token: token,
-        isAdmin: user.is_admin,
-      });
+        .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
+        .status(200)
+        .send({
+          email: user.email,
+          token: token,
+          isAdmin: user.is_admin,
+        });
     } catch (error) {
       console.error('Error login: ', error);
       res.status(500).json('Something went wrong');
     }
   });
-  
+
   /**
    * @access: /api/auth/register
    * @method: POST
-   * @description: Register for end-users only. 
+   * @description: Register for end-users only.
    * @argument {
    *    email : string
-  *     token : string
-  *     group_id : string
+   *     token : string
+   *     group_id : string
    * }
    * @return {
    *    id : string,
+   *    token : string
    *    message : string
    * }
    */
@@ -83,7 +84,7 @@ export const authRouter = () => {
   router.post('/register', async (req, res, _next) => {
     const { email, password, group_id } = req.body;
 
-    if(!email || !password || !group_id) {
+    if (!email || !password || !group_id) {
       return res.status(400).json(HTTPResponses.Error[400]);
     }
     try {
@@ -92,31 +93,41 @@ export const authRouter = () => {
           email: email,
         },
       });
-      if(result) {
+      if (result) {
         return res.status(400).json(HTTPResponses.Error[400]);
       }
       const groupIdResult = await db.user_group.findOne({
         where: {
-          registration_link : group_id,
-          is_active : true,
-        }
+          registration_link: group_id,
+          is_active: true,
+        },
       });
-      if(!groupIdResult) {
+      if (!groupIdResult) {
         return res.status(404).json(HTTPResponses.Error[404]);
       }
       const hashedPassword = await hashPassword(password);
-        const user = await db.end_user.create({
-          group_id: group_id,
-          email: email,
-          password: hashedPassword,
-          is_admin: false,
-        });
-        res.status(201).send({
-          id: user.id,
-          message: 'Registration successful',
+      const user = await db.end_user.create({
+        registration_link: group_id,
+        email: email,
+        password: hashedPassword,
+        is_admin: false,
       });
-      
-    } catch(error) {
+
+      const token = createToken(user.id);
+      const refreshToken = createRefreshCookie(user.id);
+      user.refresh_token = refreshToken;
+      user.last_login = Date();
+      await user.save();
+
+      res
+        .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
+        .status(201)
+        .send({
+          email: user.email,
+          token: token,
+          isAdmin: user.is_admin,
+        });
+    } catch (error) {
       console.error('Error registering user', error);
       return res.status(500).json(HTTPResponses.Error[500]);
     }
@@ -172,4 +183,4 @@ export const authRouter = () => {
     }
   });
   return router;
-}
+};

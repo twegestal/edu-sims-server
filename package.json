@@ -8,13 +8,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "ved": "SET NODE_ENV=development & nodemon src/index.js",
     "dev": "NODE_ENV=development nodemon src/index.js",
-    "start": "NODE_ENV=production node src/index.js"
+    "start": "NODE_ENV=production node src/index.js",
+    "format": "prettier --write ."
   },
   "author": "teodor wegestål",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^16.4.5",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
