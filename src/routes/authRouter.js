@@ -99,7 +99,12 @@ export const authRouter = () => {
       await user.save();
 
       res
-        .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
+        .cookie('refresh-token', refreshToken, { 
+          httpOnly: true, 
+          sameSite: 'none',
+          secure: true,
+          path: '/',
+        })
         .status(201)
         .send({
           email: user.email,
