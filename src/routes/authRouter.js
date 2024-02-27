@@ -1,7 +1,7 @@
 import express from 'express';
 import * as db from '../models/object_index.js';
 import { comparePasswords, hashPassword } from '../utils/encryption.js';
-import { createRefreshCookie, createToken } from '../utils/jwtHandler.js';
+import { createRefreshCookie, createToken, validateRefreshToken } from '../utils/jwtHandler.js';
 import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
@@ -178,6 +178,7 @@ export const authRouter = () => {
       if (error.message === 'Invalid refresh token') {
         res.status(401).json('Token expired');
       } else {
+        console.error('Error logging in with refresh token: ', error);
         res.status(500).json(HTTPResponses.Error[500]);
       }
     }
