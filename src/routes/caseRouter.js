@@ -25,6 +25,7 @@ export const caseRouter = () => {
   * }
   */
   router.get('/', async (req, res, _next) => {
+    console.log("HÄR FINNS REQ", req.query);
     const caseId = req.query.caseId;
     if (caseId) {
       try {
