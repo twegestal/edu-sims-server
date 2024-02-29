@@ -17,6 +17,9 @@ export const introduction = db.define(
     prompt: {
       type: DataTypes.TEXT,
     },
+    continue_treatment: {
+      type: DataTypes.TEXT,
+    },
     feedback_correct: {
       type: DataTypes.TEXT,
     },
