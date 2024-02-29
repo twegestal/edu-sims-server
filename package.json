@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ved": "SET NODE_ENV=development & nodemon src/index.js",
-    "dev": "NODE_ENV=development nodemon src/index.js",
+    "dev": "nodemon -r dotenv/config src/index.js",
     "start": "NODE_ENV=production node src/index.js",
     "format": "prettier --write ."
   },
