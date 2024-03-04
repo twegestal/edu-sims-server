@@ -43,7 +43,7 @@ export const authRouter = () => {
       }
       const compareResult = await comparePasswords(password, user.password);
       if (!compareResult) {
-        return res.status(404).json('Le kuk');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
       const token = createToken(user.id);
       const refreshToken = createRefreshCookie(user.id);
