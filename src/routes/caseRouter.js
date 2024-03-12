@@ -8,7 +8,7 @@ import { validateCaseToPublish } from '../utils/validators/caseValidator.js';
 
 /**
  * @access: /api/case/
- * @description Router as defined by Express. 
+ * @description Router as defined by Express.
  * @returns: Router for all end-points concerning cases
  */
 
@@ -16,14 +16,14 @@ export const caseRouter = () => {
   const router = Router();
 
   /**
-  * @access: /api/case/
-  * @method: GET
-  * @description: Retrieves a specific case with ID as query param, all if no query param present
-  * @param caseId : string
-  * @return {
-  *   https : Case[] || Case Object
-  * }
-  */
+   * @access: /api/case/
+   * @method: GET
+   * @description: Retrieves a specific case with ID as query param, all if no query param present
+   * @param caseId : string
+   * @return {
+   *   https : Case[] || Case Object
+   * }
+   */
   router.get('/', async (req, res, _next) => {
     const caseId = req.query.caseId;
     if (caseId) {
@@ -70,16 +70,16 @@ export const caseRouter = () => {
   });
 
   /**
-  * @access: /api/case/
-  * @method: DELETE
-  * @description: Deletes a case from the database
-  * @argument {
-  *   caseId : string
-  * }
-  * @return {
-  *   https : response { No data returned besides HTTP Status }
-  * }
-  */
+   * @access: /api/case/
+   * @method: DELETE
+   * @description: Deletes a case from the database
+   * @argument {
+   *   caseId : string
+   * }
+   * @return {
+   *   https : response { No data returned besides HTTP Status }
+   * }
+   */
 
   router.delete('/', async (req, res, _next) => {
     try {
@@ -108,19 +108,19 @@ export const caseRouter = () => {
   });
 
   /**
-  * @access: /api/case/
-  * @method: PATCH
-  * @description: Updates an existing case
-  * @argument {
-  *   caseObject : JSON-object
-  *   caseId : string,
-  *   removedModules: Object[] 
-  * }
-  * @return {
-  *   https : response { No data returned besides HTTP Status }
-  * }
-  */
-  
+   * @access: /api/case/
+   * @method: PATCH
+   * @description: Updates an existing case
+   * @argument {
+   *   caseObject : JSON-object
+   *   caseId : string,
+   *   removedModules: Object[]
+   * }
+   * @return {
+   *   https : response { No data returned besides HTTP Status }
+   * }
+   */
+
   router.patch('/', async (req, res, _next) => {
     let transaction = null;
     try {
@@ -161,22 +161,22 @@ export const caseRouter = () => {
   });
 
   /**
-  * @access: /api/case/
-  * @method: POST
-  * @description: Creates a new case
-  * @argument {
-  *   caseObject : JSON-object
-  * }
-  * @return {
-  *   https : response { No data returned besides HTTP Status }
-  * }
-  */
+   * @access: /api/case/
+   * @method: POST
+   * @description: Creates a new case
+   * @argument {
+   *   caseObject : JSON-object
+   * }
+   * @return {
+   *   https : response { No data returned besides HTTP Status }
+   * }
+   */
 
   router.post('/', async (req, res, _next) => {
     let transaction = null;
     try {
       const caseObject = req.body;
-      if(!caseObject) {
+      if (!caseObject) {
         return res.status(400).json(HTTPResponses.Error[400]);
       }
       transaction = await getTransaction();
@@ -212,17 +212,17 @@ export const caseRouter = () => {
   });
 
   /**
-  * @access: /api/case/publish
-  * @method: PATCH
-  * @description: Updates the published status of a case
-  * @argument {
-  *   id : string,
-  *   publish : boolean
-  * }
-  * @return {
-  *   https : response { No data returned besides HTTP Status }
-  * }
-  */
+   * @access: /api/case/publish
+   * @method: PATCH
+   * @description: Updates the published status of a case
+   * @argument {
+   *   id : string,
+   *   publish : boolean
+   * }
+   * @return {
+   *   https : response { No data returned besides HTTP Status }
+   * }
+   */
   router.patch('/publish', async (req, res, next) => {
     try {
       const { id, publish } = req.body;
@@ -232,10 +232,10 @@ export const caseRouter = () => {
         const medicalCase = await db.medical_case.findOne({
           where: {
             id: id,
-            published : !publish
+            published: !publish,
           },
         });
-        if(!medicalCase) {
+        if (!medicalCase) {
           return res.status(400).json(HTTPResponses.Error[400]);
         }
         const steps = await db.step.findAll({
@@ -257,30 +257,30 @@ export const caseRouter = () => {
           return res.status(200).json(HTTPResponses.Success[200]);
         } else {
           return res.status(400).send(validationResult.errors);
-        } 
+        }
       }
-    } catch(error) {
+    } catch (error) {
       console.error(ConsoleResponses.SERVER_ERROR, error);
       return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   /**
-  * @access: /api/case/modules
-  * @method: GET
-  * @description: Returns all modules able to be added to a case
-  * @argument {
-  *   none
-  * }
-  * @return {
-  *   response : Module[]
-  * }
-  */
+   * @access: /api/case/modules
+   * @method: GET
+   * @description: Returns all modules able to be added to a case
+   * @argument {
+   *   none
+   * }
+   * @return {
+   *   response : Module[]
+   * }
+   */
   router.get('/modules', async (_req, res, _next) => {
     try {
       const response = await db.module_type.findAll();
-      if(!response) {
-        return res.status(404).json(HTTPResponses.Error[404])
+      if (!response) {
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
       res.status(200).send(response);
     } catch (error) {

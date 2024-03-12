@@ -6,7 +6,7 @@ import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
  * @access: /api/auth/
- * @description Router as defined by Express. 
+ * @description Router as defined by Express.
  * @returns: Router for all end-points concerning authentication
  */
 
@@ -68,11 +68,11 @@ export const authRouter = () => {
   /**
    * @access: /api/auth/register
    * @method: POST
-   * @description: Register for end-users only. 
+   * @description: Register for end-users only.
    * @argument {
    *    email : string
-  *     password : string
-  *     group_id : string
+   *     password : string
+   *     group_id : string
    * }
    * @return {
    *    id : string,
@@ -99,7 +99,7 @@ export const authRouter = () => {
         where: {
           registration_link: group_id,
           is_active: true,
-        }
+        },
       });
       if (!groupIdResult) {
         return res.status(404).json(HTTPResponses.Error[404]);
@@ -115,7 +115,6 @@ export const authRouter = () => {
         id: user.id,
         message: 'Registration successful',
       });
-
     } catch (error) {
       console.error('Error registering user', error);
       return res.status(500).json(HTTPResponses.Error[500]);
@@ -172,4 +171,4 @@ export const authRouter = () => {
     }
   });
   return router;
-}
+};

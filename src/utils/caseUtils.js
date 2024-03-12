@@ -92,7 +92,7 @@ const fetchExaminationStep = async (stepId) => {
   });
 
   stepData.dataValues = { ...stepData.dataValues, step_specific_values: stepSpecificValues };
-  
+
   return stepData;
 };
 

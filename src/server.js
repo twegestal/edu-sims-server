@@ -17,4 +17,4 @@ export const createServer = () => {
   app.use('/case', caseRouter());
   app.use('/attempt', attemptRouter());
   return app;
-}
+};
