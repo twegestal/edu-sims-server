@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import * as object from '../models/object_index.js';
+import * as object from '../../models/object_index.js';
 
 /**
  * Functions that handle the creating and validation of access/refresh-tokens

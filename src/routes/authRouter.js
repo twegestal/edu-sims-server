@@ -1,13 +1,17 @@
 import express from 'express';
 import * as db from '../models/object_index.js';
-import { comparePasswords, hashPassword } from '../utils/encryption.js';
-import { createRefreshCookie, createToken, validateRefreshToken } from '../utils/jwtHandler.js';
+import { comparePasswords, hashPassword } from '../utils/auth/encryption.js';
+import {
+  createRefreshCookie,
+  createToken,
+  validateRefreshToken,
+} from '../utils/auth/jwtHandler.js';
 import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
  * @access: /api/auth/
  * @description Router as defined by Express.
- * @returns: Router for all auth endpoints
+ * @returns: Router for all end-points concerning authentication
  */
 export const authRouter = () => {
   const router = express.Router();
@@ -33,7 +37,7 @@ export const authRouter = () => {
       }
       const compareResult = await comparePasswords(password, user.password);
       if (!compareResult) {
-        return res.status(404).json('Username or password incorrect');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
       const token = createToken(user.id);
       const refreshToken = createRefreshCookie(user.id);
@@ -148,7 +152,7 @@ export const authRouter = () => {
       if (error.message === 'Invalid refresh token') {
         res.status(401).json('Token expired');
       } else {
-        console.error('Error logging in with refresh token: ', error);
+        console.error(error);
         res.status(500).json(HTTPResponses.Error[500]);
       }
     }
