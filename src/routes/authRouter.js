@@ -1,7 +1,11 @@
 import express from 'express';
 import * as db from '../models/object_index.js';
 import { comparePasswords, hashPassword } from '../utils/auth/encryption.js';
-import { createRefreshCookie, createToken, validateRefreshToken } from '../utils/auth/jwtHandler.js';
+import {
+  createRefreshCookie,
+  createToken,
+  validateRefreshToken,
+} from '../utils/auth/jwtHandler.js';
 import { HTTPResponses } from '../utils/serverResponses.js';
 
 /**
