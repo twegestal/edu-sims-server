@@ -13,24 +13,14 @@ import { HTTPResponses } from '../utils/serverResponses.js';
  * @description Router as defined by Express.
  * @returns: Router for all end-points concerning authentication
  */
-
 export const authRouter = () => {
   const router = express.Router();
+
   /**
    * @access: /api/auth/login
    * @method: POST
    * @description: Login-function for both super-user and user.
-   * @argument {
-   *    email : string
-   *    password : string
-   * }
-   * @return {
-   *    email : string
-   *    token : string
-   *    isAdmin : boolean
-   * }
    */
-
   router.post('/login', async (req, res, _next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -73,17 +63,7 @@ export const authRouter = () => {
    * @access: /api/auth/register
    * @method: POST
    * @description: Register for end-users only.
-   * @argument {
-   *    email : string
-   *     password : string
-   *     group_id : string
-   * }
-   * @return {
-   *    id : string,
-   *    message : string
-   * }
    */
-
   router.post('/register', async (req, res, _next) => {
     const { email, password, group_id } = req.body;
 
@@ -115,10 +95,21 @@ export const authRouter = () => {
         password: hashedPassword,
         is_admin: false,
       });
-      res.status(201).send({
-        id: user.id,
-        message: 'Registration successful',
-      });
+
+      const token = createToken(user.id);
+      const refreshToken = createRefreshCookie(user.id);
+      user.refresh_token = refreshToken;
+      user.last_login = Date();
+      await user.save();
+
+      res
+        .cookie('refresh-token', refreshToken, { httpOnly: true, sameSite: 'strict' })
+        .status(201)
+        .send({
+          email: user.email,
+          token: token,
+          isAdmin: user.is_admin,
+        });
     } catch (error) {
       console.error('Error registering user', error);
       return res.status(500).json(HTTPResponses.Error[500]);
@@ -129,16 +120,7 @@ export const authRouter = () => {
    * @access: /api/auth/refresh-token
    * @method: GET
    * @description: Authorization with refresh token found in cookies from request
-   * @argument {
-   *    none
-   * }
-   * @return {
-   *    email : string,
-   *    token : string,
-   *    isAdmin : boolean
-   * }
    */
-
   router.get('/refresh-token', async (req, res, _next) => {
     const refreshToken = req.cookies['refresh-token'];
     if (!refreshToken) {
@@ -175,5 +157,6 @@ export const authRouter = () => {
       }
     }
   });
+
   return router;
 };

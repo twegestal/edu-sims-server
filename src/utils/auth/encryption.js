@@ -1,5 +1,9 @@
 import bcrypt from 'bcrypt';
 
+/**
+ * Password encryption functions
+ */
+
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 export const hashPassword = async (password) => {
   try {

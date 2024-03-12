@@ -1,6 +1,10 @@
 import * as object from '../models/object_index.js';
 import { db } from '../database/databaseConnection.js';
 
+/**
+ * This file contains various utility functions for CRUD operations on cases
+ */
+
 export const insertSteps = async (steps, caseId, transaction) => {
   for (let i = 0; i < steps.length; i++) {
     const stepData = steps[i].stepData;

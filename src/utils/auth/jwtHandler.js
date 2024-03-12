@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 import * as object from '../../models/object_index.js';
 
+/**
+ * Functions that handle the creating and validation of access/refresh-tokens
+ */
+
 export const createToken = (id) => {
   const res = jwt.sign({ id: id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
   return res;
@@ -26,8 +30,7 @@ export const validateToken = (req, res, next) => {
 };
 
 const authWithRefreshToken = async (req, res, next) => {
-  const refreshToken = req.cookies['refreshToken'];
-
+  const refreshToken = req.cookies['refresh-token'];
   try {
     const userId = await validateRefreshToken(refreshToken);
 
