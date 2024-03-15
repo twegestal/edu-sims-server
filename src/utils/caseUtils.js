@@ -85,6 +85,14 @@ const fetchExaminationStep = async (stepId) => {
     stepData.examination_to_display,
   );
 
+  const stepSpecificValues = await object.step_specific_values.findAll({
+    where: {
+      examination_step_id: stepId,
+    },
+  });
+
+  stepData.dataValues = { ...stepData.dataValues, step_specific_values: stepSpecificValues };
+
   return stepData;
 };
 
