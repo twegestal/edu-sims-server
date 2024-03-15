@@ -9,6 +9,8 @@ import { userRouter } from './routes/userRouter.js';
 import { treatmentRouter } from './routes/treatmentRouter.js';
 import { diagnosisRouter } from './routes/diagnosisRouter.js';
 import { medicalFieldRouter } from './routes/medicalFieldRouter.js';
+import { statisticsRouter } from './routes/statisticsRouter.js';
+import { examinationRouter } from './routes/examinationRouter.js';
 
 /**
  * Server entry point
@@ -28,6 +30,8 @@ export const createServer = () => {
   app.use('/treatment', treatmentRouter());
   app.use('/diagnosis', diagnosisRouter());
   app.use('/medical-field', medicalFieldRouter());
+  app.use('/examination', examinationRouter());
+  app.use('/statistics', statisticsRouter());
   app.use('/user', userRouter());
   return app;
 };
