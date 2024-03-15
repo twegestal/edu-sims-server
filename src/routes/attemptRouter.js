@@ -4,15 +4,6 @@ import { sortAttempts } from '../utils/caseUtils.js';
 import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';
 
 /**
- * FIX ME
- * FIX ME
- * FIX ME
- * FIX ME
- * FIX ME
- * FIX ME
- */
-
-/**
  * @access: /api/attempt/
  * @description Router as defined by Express.
  * @returns: Router for all end-points concerning case attempts
@@ -35,28 +26,29 @@ export const attemptRouter = () => {
    * }
    */
   router.get('/', async (req, res, _next) => {
+    const userId = req.id;
+    const attemptId = req.query.attemptId;
+
     try {
-      const userId = req.query.userId;
-      const attemptId = req.query.attemptId;
-      if (userId) {
-        const result = await db.attempt.findAll({ where: { user_id: userId } });
-        if (!result) {
-          return res.status(404).json(HTTPResponses.Error[404]);
-        }
-        const sortedResults = sortAttempts(result);
-        return res.status(200).json(sortedResults);
-      }
       if (attemptId) {
         const result = await db.attempt.findOne({ where: { id: attemptId } });
         if (!result) {
           return res.status(404).json(HTTPResponses.Error[404]);
         }
         return res.status(200).json(result);
+      } else if (userId) {
+        const result = await db.attempt.findAll({ where: { user_id: userId } });
+        if (!result) {
+          return res.status(404).json(HTTPResponses.Error[404]);
+        }
+        const sortedResults = sortAttempts(result);
+        return res.status(200).json(sortedResults);
+      } else {
+        return res.status(400).json(HTTPResponses.Error[400]);
       }
-      return res.status(400).json(HTTPResponses.Error[400]);
     } catch (error) {
       console.error(ConsoleResponses.SERVER_ERROR, error);
-      return res.status(500).json(HTTPResponses.Error[500]);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
@@ -74,7 +66,8 @@ export const attemptRouter = () => {
    */
   router.post('/', async (req, res, _next) => {
     try {
-      const { userId, caseId } = req.body;
+      const { caseId } = req.body;
+      const userId = req.id;
       if (!userId || !caseId) {
         res.status(404).json(HTTPResponses.Error[404]);
       } else {
@@ -86,7 +79,7 @@ export const attemptRouter = () => {
         if (!result) {
           return res.status(400).json(HTTPResponses.Error[400]);
         }
-        res.status(200).json(result);
+        res.status(200).send(result);
       }
     } catch (error) {
       console.error(ConsoleResponses.SERVER_ERROR);
@@ -158,7 +151,7 @@ export const attemptRouter = () => {
       }
     } else {
       try {
-        const result = await db.attempt.update(
+        await db.attempt.update(
           {
             is_finished: is_finished,
             faults: faults,

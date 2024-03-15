@@ -4,7 +4,7 @@ import { createServer } from '../server.js';
 
 const requestWithSupertest = supertest(createServer());
 
-describe('authorization-nonadmin', () => {
+describe.only('authorization-nonadmin', () => {
   it('should return 200 OK on successful login', async () => {
     const user = {
       email: 'user@user.user',
@@ -14,7 +14,7 @@ describe('authorization-nonadmin', () => {
   });
 });
 
-describe.only('get-all-cases', () => {
+describe('Tests for fetching cases', () => {
   it('should return 200 OK on calling api/case', async () => {
     const user = {
       email: 'user@user.user',
