@@ -7,6 +7,7 @@ import { validateToken } from './utils/auth/jwtHandler.js';
 import { attemptRouter } from './routes/attemptRouter.js';
 import { userRouter } from './routes/userRouter.js';
 import { treatmentRouter } from './routes/treatmentRouter.js';
+import { diagnosisRouter } from './routes/diagnosisRouter.js';
 
 /**
  * Server entry point
@@ -24,6 +25,7 @@ export const createServer = () => {
   app.use('/case', caseRouter());
   app.use('/attempt', attemptRouter());
   app.use('/treatment', treatmentRouter());
+  app.use('/diagnosis', diagnosisRouter());
   app.use('/user', userRouter());
   return app;
 };
