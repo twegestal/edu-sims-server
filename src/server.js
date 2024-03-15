@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { authRouter } from './routes/authRouter.js';
 import { caseRouter } from './routes/caseRouter.js';
 import { validateToken } from './utils/auth/jwtHandler.js';
 import { attemptRouter } from './routes/attemptRouter.js';
-import cookieParser from 'cookie-parser';
 import { userRouter } from './routes/userRouter.js';
+import { treatmentRouter } from './routes/treatmentRouter.js';
 
 /**
  * Server entry point
@@ -22,6 +23,7 @@ export const createServer = () => {
   app.use(validateToken);
   app.use('/case', caseRouter());
   app.use('/attempt', attemptRouter());
+  app.use('/treatment', treatmentRouter());
   app.use('/user', userRouter());
   return app;
 };
