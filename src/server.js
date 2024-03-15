@@ -8,6 +8,7 @@ import { attemptRouter } from './routes/attemptRouter.js';
 import { userRouter } from './routes/userRouter.js';
 import { treatmentRouter } from './routes/treatmentRouter.js';
 import { diagnosisRouter } from './routes/diagnosisRouter.js';
+import { medicalFieldRouter } from './routes/medicalFieldRouter.js';
 
 /**
  * Server entry point
@@ -26,6 +27,7 @@ export const createServer = () => {
   app.use('/attempt', attemptRouter());
   app.use('/treatment', treatmentRouter());
   app.use('/diagnosis', diagnosisRouter());
+  app.use('/medical-field', medicalFieldRouter());
   app.use('/user', userRouter());
   return app;
 };
