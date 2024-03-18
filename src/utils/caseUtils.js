@@ -151,6 +151,14 @@ const fetchTreatmentStep = async (stepId) => {
 
   stepData.treatments_to_display = await fetchTreatmentsToDisplay(stepData.treatments_to_display);
 
+  const stepSpecificTreatments = await object.step_specific_treatment.findAll({
+    where: {
+      treatment_step_id: stepId,
+    },
+  });
+
+  stepData.dataValues = {...stepData.dataValues, step_specific_treatments: stepSpecificTreatments};
+
   return stepData;
 };
 
